@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load staticfiles %}
+    <div class="row text-center">
+                <div class="col-md-2 col-md-offset-1">
+                    <img src="{% static 'media/syncing.png' %}" alt="" />
+                    <h3>可靠的文件同步</h3>
+                    <p class="text-left">文件组织成资料库。每个资料库可选择性的同步到任意设备。可靠高效的文件同步将提高您的工作效率。
+                    </p>
+                </div>
+                <div class="col-md-2">
+                    <img src="{% static 'media/drive-client.png' %}" alt="" />
+                    <h3>挂载盘客户端</h3>
+                    <p class="text-left">直接通过本地 S 盘来访问云端文件，不占用本地存储。为电脑提供服务器的海量存储空间。同操作系统无缝集成，还可以离线修改文件。</p>
+                </div>
+                <div class="col-md-2">
+                    <img src="{% static 'media/group.png' %}" alt="" />
+                    <h3>团队协作</h3>
+                    <p class="text-left">可以共享文件到群组。权限管理、版本控制、事件通知让协作更为流畅。</p>
+                </div>
+                <div class="col-md-2">
+                    <img src="{% static 'media/fast.png' %}" alt="" />
+                    <h3>高性能</h3>
+                    <p class="text-left">Seafile 服务器内核由 C 语言编写。运行起来小巧快速。</p>
+                </div>
+
+                <div class="col-md-2">
+                    <img src="{% static 'media/upgrade.png' %}" alt="" />
+                    <h3>升级简单</h3>
+                    <p class="text-left">只需下载最新的软件包，简单一个脚本即完成版本升级。</p>
+                </div>
+    </div>
+{% endblock %}

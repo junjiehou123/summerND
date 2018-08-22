@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}主页{% endblock %}
+{% block content %}
+     <table id="table_id" class="display">
+            <thead>
+                <tr>
+                    <th>文件名</th>
+                    <th>上传时间</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for data in file_list %}
+                <tr>
+                    <td>{{ data.file }}</td>
+                    <td>{{ data.upload_date|date:"Y-m-d H:i:s"}}</td>
+                    <td> <a href = "/netdisk2/download?downloadfile={{ data.id }}">点击下载</a></td>
+                </tr>
+             {% endfor %}
+            </tbody>
+        </table>
+        <table>
+</table>
+{% endblock %}
+{% block script %}
+<script>
+
+</script>
+{% endblock %}
