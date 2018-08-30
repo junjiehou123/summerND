@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}主页{% endblock %}
+{% block content %}
+ <div class="contact">
+ <form class="contact_form">
+ <ul>
+ <li>
+ <h2>群组</h2>
+</li>
+</ul>
+</form>
+</div>
+     <table id="table_id" class="display">
+            <thead>
+                <tr>
+                    <th>群组名称</th>
+                    <th>群组描述</th>
+                    <th>群主</th>
+                    <th>邀请码</th>
+                    <th>123</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for data in group %}
+                <tr>
+                    <td>{{ data.group_name }}</td>
+                    <td>{{ data.description}}</td>
+                    <td>{{ data.creator}}</td>
+                    <td>{{ data.id}}</td>
+                    <td><button onclick="AjaxSubmit('{{ data.id}}');return false;">进入群组</button></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+        </table>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function(){
+        $('#table_id').DataTable();
+    });
+    function AjaxSubmit(id){
+        console.log(id);
+        window.location.href = "/netdisk2/group/detail?id="+id;
+    }
+</script>
+{% endblock %}

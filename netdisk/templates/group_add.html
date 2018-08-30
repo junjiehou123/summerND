@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}主页{% endblock %}
+{% block content %}
+    <div class="contact">
+    <form class="contact_form">
+    {% csrf_token %}
+    <ul>
+        <li>
+             <h2>加入群组</h2>
+             <span class="required_notification">* 表示必填项</span>
+        </li>
+        <li>
+            <label for="code">邀请码:</label>
+            <input name ='code' type="text"  placeholder="" required />
+            <span class="form_hint">从群主那里获取的20位推荐码</span>
+        </li>
+        <li>
+            <button onclick="AjaxSubmit();return false;">提交</button>
+        </li>
+    </ul>
+</form>
+</div>
+{% endblock %}
+{% block script%}
+<script>
+     function AjaxSubmit(){
+         var code = $("input[name=code]").val();;
+        $.ajax({
+            url:"/netdisk2/group/add",
+            type:'POST',
+            data:{code:code},
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data.status)
+            }
+        });
+    }
+</script>
+{% endblock%}

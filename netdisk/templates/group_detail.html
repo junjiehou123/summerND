@@ -6,7 +6,7 @@
  <form class="contact_form">
  <ul>
  <li>
- <h2>文件下载</h2>
+ <h2>群组详情----{{ group.group_name }}</h2>
 </li>
 </ul>
 </form>
@@ -31,12 +31,26 @@
         </table>
         <table>
 </table>
+ <div class="contact">
+ <form class="contact_form">
+ <ul>
+ <li>
+ <h2>文件上传</h2>
+</li>
+</ul>
+</form>
+</div>
+    <form action="/netdisk2/upload/" method="post" enctype="multipart/form-data">
+     {% csrf_token %}
+        <input type="file" name="fafafa">
+        <input type="hidden" name="group" value='{{group.id}}' />
+        <input type="submit">
+    </form>
 {% endblock %}
 {% block script %}
 <script>
     $(document).ready(function(){
         $('#table_id').DataTable();
-        console.log(1);
     });
 </script>
 {% endblock %}

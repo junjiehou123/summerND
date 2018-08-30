@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}主页{% endblock %}
 {% block content %}
+ <div class="contact">
+ <form class="contact_form">
+ <ul>
+ <li>
+ <h2>文件上传</h2>
+</li>
+</ul>
+</form>
+</div>
     <form action="/netdisk2/upload/" method="post" enctype="multipart/form-data">
      {% csrf_token %}
         <input type="file" name="fafafa">

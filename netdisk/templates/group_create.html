@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block title %}主页{% endblock %}
+{% block content %}
+    <div class="contact">
+    <form class="contact_form">
+    {% csrf_token %}
+    <ul>
+        <li>
+             <h2>新建群组</h2>
+             <span class="required_notification">* 表示必填项</span>
+        </li>
+        <li>
+            <label for="name">群组名称:</label>
+            <input name ='name' type="text"  placeholder="Sunbest" required />
+            <span class="form_hint">正确格式为：6~18个字符，可使用字母、数字、下划线，需以字母开头</span>
+        </li>
+        <li>
+            <label for="description">留言:</label>
+            <textarea name="description" cols="40" rows="6" placeholder="" required ></textarea>
+        </li>
+        <li>
+            <button onclick="AjaxSubmit();return false;">提交</button>
+        </li>
+    </ul>
+</form>
+</div>
+{% endblock %}
+{% block script%}
+<script>
+     function AjaxSubmit(){
+         var name = $("input[name=name]").val();
+         var description = $("textarea[name=description]").val();
+        $.ajax({
+            url:"/netdisk2/group/create",
+            type:'POST',
+            data:{name:name,description:description},
+            success: function (data) {
+                data = JSON.parse(data);
+                console.log(data.status)
+                window.location.href = "/netdisk2/group/my"
+            }
+        });
+    }
+</script>
+{% endblock%}
