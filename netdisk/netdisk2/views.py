@@ -29,7 +29,8 @@ def upload(request):
     if request.method == 'POST':
         user = User.objects.get(user_id=request.session.get("user"))
         group = Group.objects.filter(id=request.POST.get("group"))
-        if group: group = group[0]
+        if group:
+            group = group[0]
         try:
             data = request.FILES['fafafa']
         except:
@@ -38,31 +39,31 @@ def upload(request):
                 return render(request, 'group_detail.html', {"message": message})
             else:
                 return render(request, 'upload.html', {"message": message})
-        if data:
-            file_exist = fileModel.objects.filter(name=data.name, owner=user)
-            # 名字如果相同，返回提示message
-            # 判断是个人文件还是群组文件
-            if group:
-                if file_exist:
-                    message = "您已上传过同名文件，请更改文件名"
-                    return render(request, 'group_detail.html', {"message": message})
-                else:
-                    message = "上传成功"
-                    temp_file = fileModel(file=data, owner_name=request.POST.get("group"), owner=user, owner_analysis=1,
-                                          group=group,name=data.name)
-                    temp_file.save()
-                    return render(request, 'group_detail.html', {"message": message})
+        file_exist = fileModel.objects.filter(name=data.name, owner=user)
+        # 名字如果相同，返回提示message
+        # 判断是个人文件还是群组文件
+        if group:
+            if file_exist:
+                message = "您已上传过同名文件，请更改文件名"
+                return render(request, 'group_detail.html', {"message": message})
             else:
-                owner_name = user.user_id
-                if file_exist:
-                    message = "您已上传过同名文件，请更改文件名"
-                    return render(request, 'upload.html', {"message": message})
-                else:
-                    message = "上传成功"
-                    temp_file = fileModel(file=data, owner_name=owner_name, owner=user, owner_analysis=0,
-                                          name=data.name)
-                    temp_file.save()
-                    return render(request, 'upload.html', {"message": message})
+                message = "上传成功"
+                temp_file = fileModel(file=data, owner_name=request.POST.get("group"), owner=user, owner_analysis=1,
+                                      group=group, name=data.name)
+                temp_file.save()
+                return render(request, 'group_detail.html', {"message": message})
+        else:
+            owner_name = user.user_id
+            if file_exist:
+                message = "您已上传过同名文件，请更改文件名"
+                return render(request, 'upload.html', {"message": message})
+            else:
+                message = "上传成功"
+                temp_file = fileModel(file=data, owner_name=owner_name, owner=user, owner_analysis=0,
+                                      name=data.name)
+                temp_file.save()
+                return render(request, 'upload.html', {"message": message})
+
 
 @csrf_exempt
 def delete(request):
@@ -82,18 +83,18 @@ def group_delete(request):
     if request.method == 'POST':
         group = Group.objects.get(id=request.POST.get("id"))
         user = User.objects.get(user_id=request.session.get("user"))
-        GrouptoUser.objects.get(group=group,user=user).delete()
+        GrouptoUser.objects.get(group=group, user=user).delete()
         message = "退出成功"
-        group_creator = Group.objects.filter(id=request.POST.get("id"),creator=user)
+        group_creator = Group.objects.filter(id=request.POST.get("id"), creator=user)
         if group_creator:
             message = "解散成功"
-            Group.objects.filter(id=request.POST.get("id"),creator=user)[0].delete()
+            Group.objects.filter(id=request.POST.get("id"), creator=user)[0].delete()
         p = list()
         user = request.session.get("user")
         group = GrouptoUser.objects.filter(user=user)
         for detail in group:
             p.append(detail.group)
-        return render(request, 'group_my.html', {"message": message,"group":p})
+        return render(request, 'group_my.html', {"message": message, "group": p})
 
 
 def login(request):
