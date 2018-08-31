@@ -163,7 +163,6 @@
         }
 
         .navbar-brand {
-            background: url('http://static-res.ruyo.net/ruyo_net_w_32.png') no-repeat 10px 8px;
             display: inline-block;
             vertical-align: middle;
             padding-left: 50px;
@@ -224,19 +223,6 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">群组<span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">我的群组</a></li>
-            <li><a href="#">加入群组</a></li>
-            <li><a href="/netdisk2/group/add">创建群组</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">今日推荐</a></li>
-          </ul>
-        </li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
               {% if request.session.is_login %}
                   <li><a href="#">当前在线：{{ request.session.user }}</a></li>
                   <li><a href="/netdisk2/logout">登出</a></li>
@@ -279,7 +265,6 @@
                         </a>
                         <ul id="configSetting" class="nav nav-list secondmenu collapse in">
                             <li><a href="#"><i class="glyphicon glyphicon-globe"></i>&nbsp;事务一览</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-star-empty"></i>&nbsp;我的文件</a></li>
                             <li><a href="#"><i class="glyphicon glyphicon-star"></i>&nbsp;我的信息</a></li>
                             <li><a href="#"><i class="glyphicon glyphicon-text-width"></i>&nbsp;修改信息</a></li>
                             <li><a href="#"><i class="glyphicon glyphicon-ok-circle"></i>&nbsp;修改配置</a></li>
@@ -300,6 +285,9 @@
             </div>
             <div class="col-md-10">
                 <div class="content">
+                    {% if message %}
+                        <div class="alert alert-warning">{{ message }}</div>
+                    {% endif %}
                     {% block content %}{% endblock %}
                 </div>
             </div>

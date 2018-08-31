@@ -16,14 +16,16 @@
                 <tr>
                     <th>文件名</th>
                     <th>上传时间</th>
+                    <th>上传人</th>
                     <th>下载链接</th>
                 </tr>
             </thead>
             <tbody>
             {% for data in file_list %}
                 <tr>
-                    <td>{{ data.file }}</td>
+                    <td>{{ data.name }}</td>
                     <td>{{ data.upload_date|date:"Y-m-d H:i:s"}}</td>
+                    <td>{{ data.owner}}</td>
                     <td> <a href = "/netdisk2/download?downloadfile={{ data.id }}">点击下载</a></td>
                 </tr>
              {% endfor %}

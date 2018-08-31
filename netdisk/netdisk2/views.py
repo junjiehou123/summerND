@@ -27,17 +27,41 @@ def upload(request):
     if request.method == 'GET':
         return render(request, "upload.html")
     if request.method == 'POST':
-        data = request.FILES['fafafa']
-        # 找到userid
         user = User.objects.get(user_id=request.session.get("user"))
-        group = Group.objects.get(id=request.POST.get("group"))
-        print(group)
-        owner_name = user.user_name
-        temp_file = fileModel(file=data, owner_name=group.id, owner=user,owner_analysis=1,group=group)
-        temp_file.save()
-        status = "success"
-        # 这里可以改成继续传递的形式，不返回一个jsonresponse，而是一个路径
-    return JsonResponse(status, safe=False)
+        group = Group.objects.filter(id=request.POST.get("group"))
+        try:
+            data = request.FILES['fafafa']
+        except:
+            message = "上传文件不能为空"
+            if group:
+                return render(request, 'group_detail.html', {"message": message})
+            else:
+                return render(request, 'upload.html', {"message": message})
+        if data:
+            file = fileModel.objects.get(name=data.name, owner=user)
+            # 名字如果相同，返回提示message
+            # 判断是个人文件还是群组文件
+            if group:
+                if file:
+                    message = "您已上传过同名文件，请更改文件名"
+                    return render(request, 'group_detail.html', {"message": message})
+                else:
+                    message = "上传成功"
+                    temp_file = fileModel(file=data, owner_name=group.id, owner=user, owner_analysis=1, group=group,
+                                          name=data.name)
+                    temp_file.save()
+                    return render(request, 'group_detail.html', {"message": message})
+            else:
+                owner_name = user.user_id
+                if file:
+                    message = "您已上传过同名文件，请更改文件名"
+                    return render(request, 'upload.html', {"message": message})
+                else:
+                    message = "上传成功"
+                    temp_file = fileModel(file=data, owner_name=owner_name, owner=user, owner_analysis=0,
+                                          name=data.name)
+                    temp_file.save()
+                    return render(request, 'upload.html', {"message": message})
 
 
 def login(request):
@@ -156,21 +180,23 @@ def group_add(request):
     if request.method == 'POST':
         code = request.POST.get("code")
         user = models.User.objects.get(user_id=request.session.get("user"))
-        group = models.Group.objects.get(id=code)
+        group = models.Group.objects.filter(id=code)
         if group:
-            status = models.GrouptoUser.objects.get(user=user, group=group)
+            status = models.GrouptoUser.objects.get(user=user, group=group[0])
             # status 如果找得到说明已经加入了返回1,未添加返回0，未找到该邀请码返回2
             if status:
-                return JsonResponse(json.dumps({
-                    "status": 1}), safe=False)
+                message = "已经加入，无需重复添加"
+                print(message)
+                return render(request, "group_add.html", {"message": message})
             else:
                 grouptouser = models.GrouptoUser(group=group, user=user)
                 grouptouser.save()
-                return JsonResponse(json.dumps({
-                    "status": 0}), safe=False)
+                message = "添加成功"
+                print(message)
+                return render(request, "group_add.html", {"message": message})
         else:
-            return JsonResponse(json.dumps({
-                "status": 2}), safe=False)
+            message = "未找到该邀请码对应的群组"
+            return render(request, "group_add.html", {"message": message})
 
 
 def group_detail(request):
@@ -181,12 +207,12 @@ def group_detail(request):
         user = User.objects.get(user_id=request.session.get("user"))
         group_id = request.GET.get("id")
         group = models.Group.objects.get(id=group_id)
-        status = GrouptoUser.objects.get(user=user,group=group)
-        file_list = models.fileModel.objects.filter(group=group,owner_analysis=1)
+        status = GrouptoUser.objects.get(user=user, group=group)
+        file_list = models.fileModel.objects.filter(group=group, owner_analysis=1)
         if status:
-            return render(request, 'group_detail.html', {"file_list": file_list,"group":group})
+            return render(request, 'group_detail.html', {"file_list": file_list, "group": group})
         else:
-            return render(request,'group_my.html')
+            return render(request, 'group_my.html')
     else:
         user = request.session.get('user')
         file_list = models.fileModel.objects.filter(owner=user)
@@ -206,7 +232,7 @@ def register(request):
             # 密码长度验证
             # 更多的其它验证.....
             try:
-                user = models.User.objects.get(user_name=username)
+                user = models.User.objects.get(user_id=username)
                 if user.user_password == password:
                     request.session['is_login'] = True
                     request.session['user'] = user.user_id

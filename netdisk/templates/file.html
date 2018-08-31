@@ -15,16 +15,22 @@
             <thead>
                 <tr>
                     <th>文件名</th>
+                    <th>上传位置</th>
+                    <th>所属类别</th>
                     <th>上传时间</th>
                     <th>下载链接</th>
+                    <th>删除</th>
                 </tr>
             </thead>
             <tbody>
             {% for data in file_list %}
                 <tr>
-                    <td>{{ data.file }}</td>
+                    <td>{{ data.name }}</td>
+                    <td>{{data.owner_name}}</td>
+                    <td>{% if data.owner_analysis == 0 %}个人{% else %}群组{% endif %}</td>
                     <td>{{ data.upload_date|date:"Y-m-d H:i:s"}}</td>
                     <td> <a href = "/netdisk2/download?downloadfile={{ data.id }}">点击下载</a></td>
+                    <td> <a href="">删除</a></td>
                 </tr>
              {% endfor %}
             </tbody>

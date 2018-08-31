@@ -18,7 +18,7 @@
                     <th>群组描述</th>
                     <th>群主</th>
                     <th>邀请码</th>
-                    <th>123</th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,7 +28,8 @@
                     <td>{{ data.description}}</td>
                     <td>{{ data.creator}}</td>
                     <td>{{ data.id}}</td>
-                    <td><button onclick="AjaxSubmit('{{ data.id}}');return false;">进入群组</button></td>
+                    <td><button class = " btn "onclick="AjaxSubmit('{{ data.id}}');return false;">进入群组</button>
+                    <button class = "btn btn-danger" onclick="AjaxSubmit('{{ data.id}}');return false;">退出群组</button></td>
                 </tr>
               {% endfor %}
             </tbody>

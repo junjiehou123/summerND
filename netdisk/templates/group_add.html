@@ -2,8 +2,9 @@
 {% load staticfiles %}
 {% block title %}主页{% endblock %}
 {% block content %}
+
     <div class="contact">
-    <form class="contact_form">
+    <form id="formid" class="contact_form" action="/netdisk2/group/add" method="post">
     {% csrf_token %}
     <ul>
         <li>
@@ -13,10 +14,10 @@
         <li>
             <label for="code">邀请码:</label>
             <input name ='code' type="text"  placeholder="" required />
-            <span class="form_hint">从群主那里获取的20位推荐码</span>
+            <span class="form_hint">从群主那里获取的32位邀请码</span>
         </li>
         <li>
-            <button onclick="AjaxSubmit();return false;">提交</button>
+           <button class="btn" onclick="AjaxSubmit();return false;">提交</button>
         </li>
     </ul>
 </form>
@@ -25,16 +26,7 @@
 {% block script%}
 <script>
      function AjaxSubmit(){
-         var code = $("input[name=code]").val();;
-        $.ajax({
-            url:"/netdisk2/group/add",
-            type:'POST',
-            data:{code:code},
-            success: function (data) {
-                data = JSON.parse(data);
-                console.log(data.status)
-            }
-        });
+       document.getElementById("formid").submit();
     }
 </script>
 {% endblock%}

@@ -39,6 +39,7 @@ class fileModel(models.Model):
     owner_name = models.CharField(max_length=100, null=True, blank=True)
     owner_analysis = models.SmallIntegerField(default=0)
     file = models.FileField(upload_to=report_path)
+    name = models.CharField(max_length=60,null=True,blank=True,default='default')
     upload_date = models.DateTimeField(auto_now_add=True)
     file_size = models.CharField(max_length=20, null=True, blank=True)
     file_description = models.CharField(max_length=100, default="no description")
