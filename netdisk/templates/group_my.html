@@ -29,7 +29,7 @@
                     <td>{{ data.creator}}</td>
                     <td>{{ data.id}}</td>
                     <td><button class = " btn "onclick="AjaxSubmit('{{ data.id}}');return false;">进入群组</button>
-                    <button class = "btn btn-danger" onclick="AjaxSubmit('{{ data.id}}');return false;">退出群组</button></td>
+                    <button class = "btn btn-danger" onclick="deleteSubmit('{{ data.id}}');return false;">退出群组</button></td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -41,8 +41,14 @@
         $('#table_id').DataTable();
     });
     function AjaxSubmit(id){
-        console.log(id);
         window.location.href = "/netdisk2/group/detail?id="+id;
+    }
+    function deleteSubmit(id){
+        var r=confirm("确定要退出此群吗?")
+         if (r){
+             var params = {"id":id};
+             httpPost("/netdisk2/group/delete",params)
+         }
     }
 </script>
 {% endblock %}

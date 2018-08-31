@@ -14,5 +14,7 @@ urlpatterns = [
     path('group/create',views.group_create),
     path('group/my',views.group_my),
     path('group/add',views.group_add),
-    path('group/detail',views.group_detail)
+    path('group/detail',views.group_detail),
+    path('group/delete',views.group_delete),
+    path('other/delete',views.delete)
 ]

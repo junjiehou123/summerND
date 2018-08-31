@@ -30,7 +30,7 @@
                     <td>{% if data.owner_analysis == 0 %}个人{% else %}群组{% endif %}</td>
                     <td>{{ data.upload_date|date:"Y-m-d H:i:s"}}</td>
                     <td> <a href = "/netdisk2/download?downloadfile={{ data.id }}">点击下载</a></td>
-                    <td> <a href="">删除</a></td>
+                    <td> <a href = "#" onclick= "AjaxSubmit('{{ data.id }}');">删除</a></td>
                 </tr>
              {% endfor %}
             </tbody>
@@ -42,7 +42,14 @@
 <script>
     $(document).ready(function(){
         $('#table_id').DataTable();
-        console.log(1);
     });
+
+     function AjaxSubmit(id){
+         var r=confirm("确定要删除此文件吗")
+         if (r){
+             var params = {"id":id};
+             httpPost("/netdisk2/other/delete",params)
+         }
+    }
 </script>
 {% endblock %}

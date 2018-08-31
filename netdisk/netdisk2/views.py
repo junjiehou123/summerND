@@ -29,6 +29,7 @@ def upload(request):
     if request.method == 'POST':
         user = User.objects.get(user_id=request.session.get("user"))
         group = Group.objects.filter(id=request.POST.get("group"))
+        if group: group = group[0]
         try:
             data = request.FILES['fafafa']
         except:
@@ -38,22 +39,22 @@ def upload(request):
             else:
                 return render(request, 'upload.html', {"message": message})
         if data:
-            file = fileModel.objects.get(name=data.name, owner=user)
+            file_exist = fileModel.objects.filter(name=data.name, owner=user)
             # 名字如果相同，返回提示message
             # 判断是个人文件还是群组文件
             if group:
-                if file:
+                if file_exist:
                     message = "您已上传过同名文件，请更改文件名"
                     return render(request, 'group_detail.html', {"message": message})
                 else:
                     message = "上传成功"
-                    temp_file = fileModel(file=data, owner_name=group.id, owner=user, owner_analysis=1, group=group,
-                                          name=data.name)
+                    temp_file = fileModel(file=data, owner_name=request.POST.get("group"), owner=user, owner_analysis=1,
+                                          group=group,name=data.name)
                     temp_file.save()
                     return render(request, 'group_detail.html', {"message": message})
             else:
                 owner_name = user.user_id
-                if file:
+                if file_exist:
                     message = "您已上传过同名文件，请更改文件名"
                     return render(request, 'upload.html', {"message": message})
                 else:
@@ -62,6 +63,37 @@ def upload(request):
                                           name=data.name)
                     temp_file.save()
                     return render(request, 'upload.html', {"message": message})
+
+@csrf_exempt
+def delete(request):
+    if request.session.get('is_login') is None:
+        return render(request, 'login.html')
+    if request.method == 'POST':
+        id = request.POST.get("id")
+        fileModel.objects.get(id=id).delete()
+        message = "删除成功"
+        return render(request, 'file.html', {"message": message})
+
+
+@csrf_exempt
+def group_delete(request):
+    if request.session.get('is_login') is None:
+        return render(request, 'login.html')
+    if request.method == 'POST':
+        group = Group.objects.get(id=request.POST.get("id"))
+        user = User.objects.get(user_id=request.session.get("user"))
+        GrouptoUser.objects.get(group=group,user=user).delete()
+        message = "退出成功"
+        group_creator = Group.objects.filter(id=request.POST.get("id"),creator=user)
+        if group_creator:
+            message = "解散成功"
+            Group.objects.filter(id=request.POST.get("id"),creator=user)[0].delete()
+        p = list()
+        user = request.session.get("user")
+        group = GrouptoUser.objects.filter(user=user)
+        for detail in group:
+            p.append(detail.group)
+        return render(request, 'group_my.html', {"message": message,"group":p})
 
 
 def login(request):
@@ -156,12 +188,11 @@ def group_create(request):
 
 
 def group_my(request):
-    l = dict()
-    p = list()
     if not request.session.get('is_login', None):
         # 如果本来就未登录，也就没有登出一说
         return redirect("/netdisk2/home")
     if request.method == 'GET':
+        p = list()
         user = request.session.get("user")
         group = GrouptoUser.objects.filter(user=user)
         for detail in group:

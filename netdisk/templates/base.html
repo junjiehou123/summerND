@@ -264,10 +264,10 @@
                                    <span class="pull-right glyphicon glyphicon-chevron-toggle"></span>
                         </a>
                         <ul id="configSetting" class="nav nav-list secondmenu collapse in">
-                            <li><a href="#"><i class="glyphicon glyphicon-globe"></i>&nbsp;事务一览</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-star"></i>&nbsp;我的信息</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-text-width"></i>&nbsp;修改信息</a></li>
-                            <li><a href="#"><i class="glyphicon glyphicon-ok-circle"></i>&nbsp;修改配置</a></li>
+                            <li><a href="abc"><i class="glyphicon glyphicon-globe"></i>&nbsp;事务一览</a></li>
+                            <li><a href="abc"><i class="glyphicon glyphicon-star"></i>&nbsp;我的信息</a></li>
+                            <li><a href="abc"><i class="glyphicon glyphicon-text-width"></i>&nbsp;修改信息</a></li>
+                            <li><a href="abc"><i class="glyphicon glyphicon-ok-circle"></i>&nbsp;修改配置</a></li>
                         </ul>
                     </li>
                     <li>
@@ -301,5 +301,21 @@ $('li').find('a').each(function () {
                 $(this).parent().addClass('active'); // this.className = 'active';
             }
         });
+function httpPost(URL, PARAMS) {
+        var temp = document.createElement("form");
+        temp.action = URL;
+        temp.method = "post";
+        temp.style.display = "none";
+
+        for (var x in PARAMS) {
+            var opt = document.createElement("textarea");
+            opt.name = x;
+            opt.value = PARAMS[x];
+            temp.appendChild(opt);
+        }
+        document.body.appendChild(temp);
+        temp.submit();
+        return temp;
+    }
 </script>
 {% block script %}{% endblock %}
