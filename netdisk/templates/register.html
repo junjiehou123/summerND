@@ -242,18 +242,19 @@
   </div><!-- /.container-fluid -->
         </nav>
     </div>
+    {% if message %}
+       <div class="alert alert-warning">{{ message }}</div>
+    {% endif %}
      <div class="wrap">
         <div class="container">
             <h1>Welcome</h1>
             <div class="col-md-4 col-md-offset-4">
-                <form action="/netdisk2/register" method="post">
+                <form action="/netdisk2/register/" method="post">
                     {% csrf_token %}
-                    {% if message %}
-                        <div class="alert alert-warning">{{ message }}</div>
-                    {% endif %}
                     <input type="text" name='username' class="form-control" id="id_username" placeholder="Username" autofocus required>
                     <input type="password" name='password' class="form-control" id="id_password" placeholder="Password" required>
-                    <input type="submit" value="Login"/>
+                    <input type="password" name='password2' class="form-control" id="id_password2" placeholder="Password Again" required>
+                    <input type="submit" value="Register"/>
                  </form>
             </div>
         </div>

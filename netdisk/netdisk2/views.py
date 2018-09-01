@@ -72,8 +72,10 @@ def delete(request):
     if request.method == 'POST':
         id = request.POST.get("id")
         fileModel.objects.get(id=id).delete()
+        user = request.session.get('user')
+        file_list = models.fileModel.objects.filter(owner=user)
         message = "删除成功"
-        return render(request, 'file.html', {"message": message})
+        return render(request, 'file.html', {"message": message,"file_list":file_list})
 
 
 @csrf_exempt
@@ -254,24 +256,30 @@ def group_detail(request):
 def register(request):
     if request.session.get('is_login') is True:
         return render(request, 'home.html')
+    if request.method == "GET":
+        return render(request,'register.html')
     if request.method == "POST":
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
+        password_again = request.POST.get('password2',None)
         message = "所有字段都必须填写！"
-        if username and password:  # 确保用户名和密码都不为空
+        if username and password and password_again:  # 确保用户名和密码都不为空
+            if password!=password:
+                message = "两次输入密码不一致"
+                return render(render,'register.html',{"message":message})
             username = username.strip()
             # 用户名字符合法性验证
             # 密码长度验证
             # 更多的其它验证.....
-            try:
-                user = models.User.objects.get(user_id=username)
-                if user.user_password == password:
-                    request.session['is_login'] = True
-                    request.session['user'] = user.user_id
-                    return redirect('/netdisk2/home')
-                else:
-                    message = "密码不正确！"
-            except:
-                message = "用户名不存在！"
-        return render(request, 'login.html', {"message": message})
-    return render(request, 'login.html')
+            user = models.User.objects.filter(user_id=username)
+            if user:
+                message = "用户名已存在"
+                return render(request, 'register.html', {"message": message})
+            else:
+                request.session['is_login'] = True
+                request.session['user'] = username
+                element = User(user_id=username,user_name=username,user_password=password)
+                element.save()
+                return redirect("/netdisk2/home")
+        return render(request, 'register.html', {"message": message})
+    return render(request, 'register.html')
